@@ -57,7 +57,7 @@ view: orders {
 
     allowed_value: {
       label: "a name"
-      value: "Donna_Moore"
+      value: "Donna^_Moore"
     }
   }
 
@@ -68,7 +68,7 @@ view: orders {
 
   dimension: para_dim {
     type: string
-    sql: {% if test._parameter_value == 'Donna_Moore' %}
+    sql: {% if test._parameter_value == 'Donna^_Moore' %}
           ${test_name}
         {% else %}
           ${users.first_name}
