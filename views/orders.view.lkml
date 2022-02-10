@@ -11,6 +11,7 @@ view: orders {
     primary_key: yes
     type: number
     sql: ${TABLE}.id ;;
+
   }
 
   # Dates and timestamps can be represented in Looker using a dimension group of type: time.
@@ -48,6 +49,10 @@ view: orders {
   measure: count {
     type: count
     drill_fields: [detail*]
+    link: {
+      label: "Explore Top 2000 Results"
+      url: "{{ link }}&limit=2000"
+    }
   }
 
 
@@ -59,6 +64,8 @@ view: orders {
       label: "a name"
       value: "Donna^_Moore"
     }
+
+
   }
 
   dimension: test_name {
@@ -90,4 +97,12 @@ view: orders {
       ten_million_orders.count
     ]
   }
-}
+
+  # measure:  {
+  #   sql: ;;
+  #     }
+
+
+
+
+  }
