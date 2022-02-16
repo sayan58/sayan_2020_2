@@ -20,7 +20,10 @@ view: products {
   dimension: brand {
     type: string
     sql: ${TABLE}.brand ;;
+    drill_fields: [category,department,item_name]
   }
+
+
 
   dimension: category {
     type: string
