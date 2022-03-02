@@ -3,6 +3,7 @@ connection: "the_look"
 
 # include all the views
 include: "/views/**/*.view"
+include: "/Union.view.lkml"
 
 # Datagroups define a caching policy for an Explore. To learn more,
 # use the Quick Help panel on the right to see documentation.
@@ -38,7 +39,7 @@ explore: billion_orders {
 
   join: users {
     type: left_outer
-    sql_on: ${orders.user_id} = ${users.id} ;;
+    sql_on: ${orders.user_id} = SUBSTRING(${users.id},0,1) ;;
     relationship: many_to_one
   }
 }

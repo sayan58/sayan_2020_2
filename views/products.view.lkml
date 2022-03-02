@@ -23,6 +23,32 @@ view: products {
     drill_fields: [category,department,item_name]
   }
 
+  dimension: sub_brand {
+    type: string
+    case: {
+      when: {
+        sql:${TABLE}.brand ="180s" OR ( ${TABLE}.brand ="Speedo" AND ${TABLE}.category="Swim" );;
+        label: "OK"
+      }
+      when: {
+        sql: ${TABLE}.brand="Speedo"  ;;
+        label: "OK OK"
+      }
+      else: "NoT OK"
+
+    }
+  }
+
+  dimension: liquid_test{
+    label: "liquid_test"
+    type: string
+    sql: {% if ${products.category} == 'Swim' %}
+    "ok"
+    {% else %}
+    "not ok"
+    {% endif %};;
+  }
+
 
 
   dimension: category {

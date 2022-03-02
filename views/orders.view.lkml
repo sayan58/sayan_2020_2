@@ -14,6 +14,14 @@ view: orders {
 
   }
 
+  measure: dim_mult_test {
+    label: "dim_mult_test"
+    type: sum
+    sql: 0 ;;
+    hidden: yes
+    drill_fields: [created_date]
+  }
+
   # Dates and timestamps can be represented in Looker using a dimension group of type: time.
   # Looker converts dates and timestamps to the specified timeframes within the dimension group.
 
@@ -98,9 +106,67 @@ view: orders {
     ]
   }
 
-  # measure:  {
-  #   sql: ;;
-  #     }
+  parameter: timeframe {
+    view_label: "Period over Period"
+    type: unquoted
+    allowed_value: {
+      label: "Week to Date"
+      value: "Week"
+    }
+    allowed_value: {
+      label: "Month to Date"
+      value: "Month"
+    }
+    allowed_value: {
+      label: "Quarter to Date"
+      value: "Quarter"
+    }
+    allowed_value: {
+      label: "Year to Date"
+      value: "Year"
+    }
+    default_value: "Quarter"
+  }
+
+  dimension: first_date_in_period {
+    view_label: "Period over Period"
+    type: date
+    sql: DATE_TRUNC(CURRENT_DATE(), {% parameter timeframe %});;
+  }
+
+  dimension: days_in_period {
+    view_label: "Period over Period"
+    type: number
+    sql: DATE_DIFF(CURRENT_DATE(),${first_date_in_period}, DAY) ;;
+  }
+
+  dimension: first_date_in_prior_period {
+    view_label: "Period over Period"
+    type: date
+    hidden: no
+    sql: DATE_TRUNC(DATE_SUB(CURRENT_DATE(), INTERVAL 1 {% parameter timeframe %}),{% parameter timeframe %});;
+  }
+
+  dimension: last_date_in_prior_period {
+    view_label: "Period over Period"
+    type: date
+    hidden: no
+    sql: DATE_ADD(${first_date_in_prior_period}, INTERVAL ${days_in_period} DAY) ;;
+  }
+
+  dimension: period_selected {
+    view_label: "Period over Period"
+    type: string
+    sql:
+        CASE
+          WHEN ${created_date} >=  ${first_date_in_period}
+          THEN 'This {% parameter timeframe %} to Date'
+          WHEN ${created_date} >= ${first_date_in_prior_period}
+          AND ${created_date} <= ${last_date_in_prior_period}
+          THEN 'Prior {% parameter timeframe %} to Date'
+          ELSE NULL
+          END ;;
+  }
 
 
 
